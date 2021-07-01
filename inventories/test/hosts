@@ -1,0 +1,37 @@
+# code: language=YAML insertSpaces=true tabSize=2
+
+all:
+  children:
+
+    # ---
+    # ESX clusters group
+    esxs:
+
+      # Global ESX variables
+      vars:
+        ansible_user: root
+        gather_facts: no
+
+      children:
+
+        ict-lab-01:
+          hosts:
+            ict-lab-esx01.ict.ptech.lu:
+            ict-lab-esx02.ict.ptech.lu:
+        
+        ict-lab-02:
+          hosts:
+            ict-lab-esx03.ict.ptech.lu:
+            ict-lab-esx04.ict.ptech.lu:
+
+    # # ---
+    # # VCenters
+    # vcenters:
+    #   vars:
+    #     ansible_user: root
+    #     gather_facts: no
+    #     vcenter_hostname: ict-lab-vcs01.ict.ptech.lu
+    #     vcenter_username: "Administrator@vsphere.local"
+    #     vcenter_password: "{{ lookup('env', 'VCENTER_PASSWORD') }}"
+    #   hosts:  
+    #     ict-lab-vcs01.ict.ptech.lu:

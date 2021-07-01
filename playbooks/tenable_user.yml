@@ -1,0 +1,58 @@
+- name: Setup Tenable account on ESX
+  hosts: esxs
+  connection: local
+  tasks:
+
+    - name: Create Tenable service account
+      community.vmware.vmware_local_user_manager:
+        local_user_name: "{{ tenable_user_name }}"
+        local_user_password: "{{ tenable_user_password }}"
+        state: present
+        # ---
+        hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
+        username: "{{ vcenter_username | default('root') }}"
+        password: "{{ lookup('pmp', 'regex', '.*' + inventory_hostname, 'root') }}"
+        validate_certs: no
+      delegate_to: localhost
+      tags: [never, setup]
+
+    - name: Setup Tenable service account permissions
+      community.vmware.vmware_object_role_permission:
+        role: ReadOnly
+        principal: "{{ tenable_user_name }}"
+        object_name: rootFolder
+        state: present
+        # ---
+        hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
+        username: "{{ vcenter_username | default('root') }}"
+        password: "{{ lookup('pmp', 'regex', '.*' + inventory_hostname, 'root') }}"
+        validate_certs: no
+      delegate_to: localhost
+      tags: [never, setup]
+
+    - name: Remove Tenable service account permissions
+      community.vmware.vmware_object_role_permission:
+        role: ReadOnly
+        principal: "{{ tenable_user_name }}"
+        object_name: rootFolder
+        state: absent
+        # ---
+        hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
+        username: "{{ vcenter_username | default('root') }}"
+        password: "{{ lookup('pmp', 'regex', '.*' + inventory_hostname, 'root') }}"
+        validate_certs: no
+      delegate_to: localhost
+      tags: [never, teardown, remove]
+
+    - name: Remove Tenable service account
+      community.vmware.vmware_local_user_manager:
+        local_user_name: "{{ tenable_user_name }}"
+        local_user_password: "{{ tenable_user_password }}"
+        state: absent
+        # ---
+        hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
+        username: "{{ vcenter_username | default('root') }}"
+        password: "{{ lookup('pmp', 'regex', '.*' + inventory_hostname, 'root') }}"
+        validate_certs: no
+      delegate_to: localhost
+      tags: [never, remove]

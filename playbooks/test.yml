@@ -1,0 +1,19 @@
+- name: ESXs connection test
+  hosts: esxs
+  connection: local
+  tasks:
+
+    - name: Gather ESX information
+      community.vmware.vmware_local_user_info:
+        hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
+        username: "{{ vcenter_username | default('root') }}"
+        password: "{{ lookup('pmp', 'regex', '.*' + inventory_hostname, 'root') }}"
+        validate_certs: no
+      register: _info
+      delegate_to: localhost
+      tags: [always]
+    
+    - debug:
+        var: _info
+      delegate_to: localhost
+      tags: [never, debug]
