@@ -1,5 +1,21 @@
-- name: Setup Tenable account on ESX
+- name: Group ESX host
   hosts: all
+  connection: local
+  gather_facts: no
+  tasks:
+
+    - add_host:
+        name: "{{ item }}"
+        groups: _esx_
+      when:
+        - "item | regex_search('.*esx.*')"
+      loop: "{{ groups['all'] }}"
+      delegate_to: localhost
+      tags: [always]
+
+
+- name: Setup Tenable account on ESX
+  hosts: _esx_
   connection: local
   gather_facts: no
   timeout: 2
@@ -20,7 +36,6 @@
         # ---
         hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
         username: "{{ vcenter_username | default('root') }}"
-        # password: "{{ lookup('jpclipffel.pmp.password', 'regex', '.*' + inventory_hostname, 'root') }}"
         password: "{{ esx_password }}"
         validate_certs: no
       delegate_to: localhost
@@ -35,7 +50,6 @@
         # ---
         hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
         username: "{{ vcenter_username | default('root') }}"
-        # password: "{{ lookup('jpclipffel.pmp.password', 'regex', '.*' + inventory_hostname, 'root') }}"
         password: "{{ esx_password }}"
         validate_certs: no
       delegate_to: localhost
@@ -50,7 +64,6 @@
         # ---
         hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
         username: "{{ vcenter_username | default('root') }}"
-        # password: "{{ lookup('jpclipffel.pmp.password', 'regex', '.*' + inventory_hostname, 'root') }}"
         password: "{{ esx_password }}"
         validate_certs: no
       delegate_to: localhost
@@ -64,7 +77,6 @@
         # ---
         hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
         username: "{{ vcenter_username | default('root') }}"
-        # password: "{{ lookup('jpclipffel.pmp.password', 'regex', '.*' + inventory_hostname, 'root') }}"
         password: "{{ esx_password }}"
         validate_certs: no
       delegate_to: localhost

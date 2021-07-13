@@ -1,6 +1,5 @@
 - name: Group ESX host
-  hosts:
-    - all
+  hosts: all
   connection: local
   gather_facts: no
   tasks:
