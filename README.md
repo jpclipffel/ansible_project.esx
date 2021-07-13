@@ -18,7 +18,7 @@ Project's playbooks are located in the `playbooks` sub-directory.
 
 | Playbook           | Description                                              | Ready for AWX |
 |--------------------|----------------------------------------------------------|---------------|
-| `test.yml`         | Test connection and authentocation to ESX hosts          | Yes           |
+| `ping.yml`         | Test connection and authentication to ESX hosts          | Yes           |
 | `tenable_user.yml` | Manage the Tenable (Nessus) service account on ESX hosts | Yes           |
 
 Most playbooks requires an access to PMP to get the ESX node password:
