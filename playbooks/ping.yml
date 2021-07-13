@@ -18,7 +18,7 @@
   hosts: _esx_
   connection: local
   gather_facts: no
-  timeout: 2
+  # timeout: 2
   tasks:
 
     - name: Get ESX password
