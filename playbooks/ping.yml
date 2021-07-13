@@ -15,8 +15,7 @@
 
 
 - name: ESXs connection test
-  hosts:
-    - _esx_
+  hosts: _esx_
   connection: local
   gather_facts: no
   timeout: 2
