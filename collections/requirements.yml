@@ -1,2 +1,5 @@
 collections:
   - name: community.vmware
+  - name: jpclipffel.pmp
+  - name: jpclipffel.tenable
+
