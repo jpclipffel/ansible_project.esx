@@ -1,13 +1,22 @@
 - name: ESXs connection test
-  hosts: esxs
+  hosts: all
   connection: local
+  gather_facts: no
+  timeout: 2
   tasks:
+
+    - name: Get ESX password
+      set_fact:
+        esx_password: "{{ lookup('jpclipffel.pmp.password', 'regex', '.*' + inventory_hostname, 'root') }}"
+      delegate_to: localhost
+      throttle: 1
+      tags: [always]
 
     - name: Gather ESX information
       community.vmware.vmware_local_user_info:
         hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
         username: "{{ vcenter_username | default('root') }}"
-        password: "{{ lookup('pmp', 'regex', '.*' + inventory_hostname, 'root') }}"
+        password: "{{ esx_password }}"
         validate_certs: no
       register: _info
       delegate_to: localhost

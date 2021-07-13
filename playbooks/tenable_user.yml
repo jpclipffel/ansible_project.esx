@@ -1,7 +1,16 @@
 - name: Setup Tenable account on ESX
-  hosts: esxs
+  hosts: all
   connection: local
+  gather_facts: no
+  timeout: 2
   tasks:
+
+    - name: Get ESX password
+      set_fact:
+        esx_password: "{{ lookup('jpclipffel.pmp.password', 'regex', '.*' + inventory_hostname, 'root') }}"
+      delegate_to: localhost
+      throttle: 1
+      tags: [always]
 
     - name: Create Tenable service account
       community.vmware.vmware_local_user_manager:
@@ -11,7 +20,8 @@
         # ---
         hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
         username: "{{ vcenter_username | default('root') }}"
-        password: "{{ lookup('pmp', 'regex', '.*' + inventory_hostname, 'root') }}"
+        # password: "{{ lookup('jpclipffel.pmp.password', 'regex', '.*' + inventory_hostname, 'root') }}"
+        password: "{{ esx_password }}"
         validate_certs: no
       delegate_to: localhost
       tags: [never, setup]
@@ -25,7 +35,8 @@
         # ---
         hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
         username: "{{ vcenter_username | default('root') }}"
-        password: "{{ lookup('pmp', 'regex', '.*' + inventory_hostname, 'root') }}"
+        # password: "{{ lookup('jpclipffel.pmp.password', 'regex', '.*' + inventory_hostname, 'root') }}"
+        password: "{{ esx_password }}"
         validate_certs: no
       delegate_to: localhost
       tags: [never, setup]
@@ -39,7 +50,8 @@
         # ---
         hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
         username: "{{ vcenter_username | default('root') }}"
-        password: "{{ lookup('pmp', 'regex', '.*' + inventory_hostname, 'root') }}"
+        # password: "{{ lookup('jpclipffel.pmp.password', 'regex', '.*' + inventory_hostname, 'root') }}"
+        password: "{{ esx_password }}"
         validate_certs: no
       delegate_to: localhost
       tags: [never, teardown, remove]
@@ -52,7 +64,8 @@
         # ---
         hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
         username: "{{ vcenter_username | default('root') }}"
-        password: "{{ lookup('pmp', 'regex', '.*' + inventory_hostname, 'root') }}"
+        # password: "{{ lookup('jpclipffel.pmp.password', 'regex', '.*' + inventory_hostname, 'root') }}"
+        password: "{{ esx_password }}"
         validate_certs: no
       delegate_to: localhost
       tags: [never, remove]
