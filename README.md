@@ -6,9 +6,11 @@ ESX management via Ansible/AWX.
 
 Project's inventories are located in the `inventories` sub-directory.
 
-| Inventory | Description         |
-|-----------|---------------------|
-| `test`    | ICT lab ESX cluster |
+| Inventory | Description                                                |
+|-----------|------------------------------------------------------------|
+| `test`    | ICT lab ESX cluster                                        |
+| `tenable` | Retrieve the ESX hosts from Tenable discovery scan results |
+
 
 The inventories can be sourced by AWX from this project.
 
@@ -30,20 +32,26 @@ Most playbooks requires an access to PMP to get the ESX node password:
 
 | Variable        | Description                          | Example                                |
 |-----------------|--------------------------------------|----------------------------------------|
-| `PMP_URL`       | PMP url without the trailing `/`     | `https://pmp.dt.ept.lu`                |
+| `PMP_URL`       | PMP URL without the trailing `/`     | `https://pmp.dt.ept.lu`                |
 | `PMP_AUTHTOKEN` | PMP authentication token for Ansible | `00000000-0000-0000-0000-000000000000` |
 
-If you are using AWX, you may configure 
 
 ### Playbook - `test.yml`
+
+This playbook test the connection to the ESX hosts.
+If run with `--tags debug`, some information regarding the host users will be
+displayed.
 
 Example usage:
 
 ```shell
-ansible-playbook -i inventories/test playbooks/test.yml
+ansible-playbook -i inventories/test playbooks/test.yml --tags debug
 ```
 
 ### Playbook - `tenable_user.yml`
+
+This playbook configure or deconfigure a service account on each ESX host for
+Tenable.
 
 #### Tags
 
