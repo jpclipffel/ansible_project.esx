@@ -1,10 +1,14 @@
+# code: language=Ansible
+
+
 - name: Group ESX host
   hosts: all
   connection: local
-  gather_facts: no
+  gather_facts: false
   tasks:
 
-    - add_host:
+    - name: Add host to group
+      add_host:
         name: "{{ item }}"
         groups: _esx_
       when:
@@ -17,7 +21,7 @@
 - name: ESXs connection test
   hosts: _esx_
   connection: local
-  gather_facts: no
+  gather_facts: false
   tasks:
 
     - name: Get ESX password
@@ -32,12 +36,13 @@
         hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
         username: "{{ vcenter_username | default('root') }}"
         password: "{{ esx_password }}"
-        validate_certs: no
+        validate_certs: false
       register: _info
       delegate_to: localhost
       tags: [always]
-    
-    - debug:
+
+    - name: Debug
+      debug:
         var: _info
       delegate_to: localhost
       tags: [never, debug]
