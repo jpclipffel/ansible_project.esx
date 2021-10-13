@@ -38,7 +38,7 @@
         password: "{{ esx_password }}"
         esxi_hostname: '{{ vcenter_hostname | default(inventory_hostname) }}'
         validate_certs: false
-      register: host_vmhbas
+      register: host_vmhbas[port_wwn]
       delegate_to: localhost
       tags: [always]
 
