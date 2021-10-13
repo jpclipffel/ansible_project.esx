@@ -36,7 +36,7 @@
         hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
         username: "{{ vcenter_username | default('root') }}"
         password: "{{ esx_password }}"
-        esxi_hostname: '{{ esxi_hostname }}'
+        esxi_hostname: '{{ vcenter_hostname }}'
         validate_certs: false
       register: host_vmhbas
       delegate_to: localhost
