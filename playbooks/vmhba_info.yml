@@ -44,6 +44,6 @@
 
     - name: Debug
       debug:
-        var: host_vmhbas
+        var: host_vmhbas.port_wwn
       delegate_to: localhost
       tags: [never, debug]
