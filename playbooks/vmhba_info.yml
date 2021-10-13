@@ -31,13 +31,14 @@
       throttle: 1
       tags: [always]
 
-    - name: Gather ESX information
-      community.vmware.vmware_local_user_info:
+    - name: Gather info about vmhbas of an ESXi Host
+      community.vmware.vmware_host_vmhba_info:
         hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
         username: "{{ vcenter_username | default('root') }}"
         password: "{{ esx_password }}"
+        esxi_hostname: '{{ esxi_hostname }}'
         validate_certs: false
-      register: _info
+      register: host_vmhbas
       delegate_to: localhost
       tags: [always]
 
