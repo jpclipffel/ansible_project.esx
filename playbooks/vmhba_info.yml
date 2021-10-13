@@ -44,6 +44,6 @@
 
     - name: Debug
       debug:
-        var: _info
+        var: host_vmhbas
       delegate_to: localhost
       tags: [never, debug]
