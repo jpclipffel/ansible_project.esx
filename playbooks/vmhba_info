@@ -1,0 +1,48 @@
+# code: language=Ansible
+
+
+- name: Group ESX host
+  hosts: all
+  connection: local
+  gather_facts: false
+  tasks:
+
+    - name: Add host to group
+      add_host:
+        name: "{{ item }}"
+        groups: _esx_
+      when:
+        - "item | regex_search('.*esx.*')"
+      loop: "{{ groups['all'] }}"
+      delegate_to: localhost
+      tags: [always]
+
+
+- name: ESXs connection test
+  hosts: _esx_
+  connection: local
+  gather_facts: false
+  tasks:
+
+    - name: Get ESX password
+      set_fact:
+        esx_password: "{{ lookup('jpclipffel.pmp.password', 'regex', '.*' + inventory_hostname, 'root') }}"
+      delegate_to: localhost
+      throttle: 1
+      tags: [always]
+
+    - name: Gather ESX information
+      community.vmware.vmware_local_user_info:
+        hostname: "{{ vcenter_hostname | default(inventory_hostname) }}"
+        username: "{{ vcenter_username | default('root') }}"
+        password: "{{ esx_password }}"
+        validate_certs: false
+      register: _info
+      delegate_to: localhost
+      tags: [always]
+
+    - name: Debug
+      debug:
+        var: _info
+      delegate_to: localhost
+      tags: [never, debug]
