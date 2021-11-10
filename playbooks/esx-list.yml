@@ -1,0 +1,13 @@
+- name: Vcenter Infos
+  hosts: _esx_
+  connection: local
+  gather_facts: false
+  tasks:
+
+    - name: Provide information about vCenter
+      community.vmware.vmware_about_info:
+        hostname: '{{ vcenter_hostname }}'
+        username: '{{ vcenter_username }}'
+        password: '{{ vcenter_password }}'
+      delegate_to: localhost
+      register: vcenter_about_info
