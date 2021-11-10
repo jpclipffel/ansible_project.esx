@@ -1,5 +1,5 @@
 - name: Vcenter Infos
-  hosts: _esx_
+  hosts: all
   connection: local
   gather_facts: false
   tasks:
